@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model MediaItem {
+  id               Int       @id @default(autoincrement())
+  trackId          Int       @unique
+  trackName        String
+  artistName       String
+  artworkUrl       String?
+  collectionName   String?
+  kind             String
+  trackPrice       Float?
+  currency         String?
+  primaryGenreName String?
+  trackViewUrl     String?
+  previewUrl       String?
+  releaseDate      DateTime?
+  searchTerm       String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([searchTerm])
+  @@index([trackName])
+  @@index([kind])
+}
