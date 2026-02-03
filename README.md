@@ -2,14 +2,75 @@
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Framework | Next.js 16.1.6 (App Router, Turbopack) |
-| Language | TypeScript 5.9 |
-| Database | PostgreSQL (Supabase) |
-| ORM | Prisma 5.22 |
-| Styling | Tailwind CSS 4.1 |
-| Package Manager | pnpm |
+| Layer           | Technology                             |
+| --------------- | -------------------------------------- |
+| Framework       | Next.js 16.1.6 (App Router, Turbopack) |
+| Language        | TypeScript 5.9                         |
+| Database        | PostgreSQL (Supabase)                  |
+| ORM             | Prisma 5.22                            |
+| Styling         | Tailwind CSS 4.1                       |
+| Package Manager | pnpm                                   |
+
+---
+
+## Why Next.js API Routes Instead of a Separate Backend?
+
+For this project, we chose **Next.js API Routes** over a separate backend framework like Nest.js. Here's the rationale:
+
+### 1. Simplified Architecture
+
+| Aspect       | Next.js API Routes        | Separate Backend (Nest.js)   |
+| ------------ | ------------------------- | ---------------------------- |
+| Deployment   | Single deployment         | Two deployments              |
+| Repository   | Monorepo                  | Mono or multi-repo           |
+| Shared types | Native TypeScript sharing | Requires package/duplication |
+| CORS         | Not needed (same origin)  | Configuration required       |
+
+### 2. Project Scope Alignment
+
+This is a **search application** with straightforward requirements:
+
+- One API endpoint (`/api/search`)
+- Simple CRUD operations (upsert media items)
+- No complex business logic or microservices
+
+A full backend framework would be **over-engineering** for this scope.
+
+### 3. Performance Benefits
+
+```
+Traditional Setup:
+Browser → Next.js (SSR) → Nest.js API → Database
+         ↑_______________↓
+           Network hop
+
+Next.js API Routes:
+Browser → Next.js (SSR + API) → Database
+           No extra hop
+```
+
+- **Reduced latency**: No additional network hop between frontend and backend
+- **Shared connection pool**: Prisma client reused across SSR and API
+- **Edge-ready**: Can deploy API routes to edge functions if needed
+
+### 4. Developer Experience
+
+- **Single `pnpm dev`** starts everything
+- **Hot reload** for both frontend and API
+- **Unified error handling** and logging
+- **Type safety** across the entire stack without extra tooling
+
+### 5. When to Choose a Separate Backend
+
+A dedicated backend (Nest.js, Express, etc.) would be justified if:
+
+- Multiple frontend clients (web, mobile, third-party)
+- Complex authentication/authorization (OAuth, RBAC)
+- Background jobs, queues, or scheduled tasks
+- Microservices architecture
+- Team separation (frontend/backend teams)
+
+**None of these apply to this assessment.**
 
 ---
 
@@ -86,14 +147,15 @@ model MediaItem {
 
 **Attempted Solutions**:
 
-| Approach | Result |
-|----------|--------|
-| `Promise.all()` with parallel upserts | Connection pool exhaustion |
+| Approach                                     | Result                                     |
+| -------------------------------------------- | ------------------------------------------ |
+| `Promise.all()` with parallel upserts        | Connection pool exhaustion                 |
 | `prisma.$transaction()` with batched upserts | Still slow (sequential within transaction) |
-| Batched transactions (chunks of 5) | Better, but still too slow |
-| **Raw SQL with `UNNEST`** | ✅ Optimal (2 queries total) |
+| Batched transactions (chunks of 5)           | Better, but still too slow                 |
+| **Raw SQL with `UNNEST`**                    | ✅ Optimal (2 queries total)               |
 
 **Final Solution**:
+
 ```typescript
 await prisma.$executeRaw`
   INSERT INTO "MediaItem" (...)
@@ -115,7 +177,8 @@ await prisma.$executeRaw`
 
 ### Challenge 2: Connection Pool Exhaustion
 
-**Problem**: 
+**Problem**:
+
 ```
 Timed out fetching a new connection from the connection pool.
 (connection limit: 5)
@@ -131,12 +194,12 @@ Timed out fetching a new connection from the connection pool.
 
 **Explored Options**:
 
-| Method | Status |
-|--------|--------|
-| Custom in-memory cache | ✅ Implemented |
-| `unstable_cache` | Tested, works but verbose |
-| `use cache` directive | Requires `dynamicIO` flag, incompatible with DB writes |
-| `fetch` with `next: { revalidate }` | Already used for iTunes API |
+| Method                              | Status                                                 |
+| ----------------------------------- | ------------------------------------------------------ |
+| Custom in-memory cache              | ✅ Implemented                                         |
+| `unstable_cache`                    | Tested, works but verbose                              |
+| `use cache` directive               | Requires `dynamicIO` flag, incompatible with DB writes |
+| `fetch` with `next: { revalidate }` | Already used for iTunes API                            |
 
 **Final Choice**: Simple in-memory `Map` with TTL (60 seconds).
 
@@ -159,6 +222,7 @@ function getCachedResults(term: string): MediaItem[] | null {
 ### Challenge 4: `useSearchParams()` Suspense Boundary
 
 **Problem**:
+
 ```
 useSearchParams() should be wrapped in a suspense boundary at page "/"
 ```
@@ -207,11 +271,11 @@ export function LoadingSpinner({ delay = 300 }: LoadingSpinnerProps) {
 
 ## Performance Summary
 
-| Metric | Before | After |
-|--------|--------|-------|
-| DB queries per search | 50+ | 2 |
-| Cached response time | N/A | ~5ms |
-| Fresh search time | ~2-3s | ~500ms |
+| Metric                | Before    | After   |
+| --------------------- | --------- | ------- |
+| DB queries per search | 50+       | 2       |
+| Cached response time  | N/A       | ~5ms    |
+| Fresh search time     | ~2-3s     | ~500ms  |
 | Connection pool usage | Exhausted | Minimal |
 
 ---
