@@ -22,7 +22,7 @@ export function Header({
 }: HeaderProps) {
   const router = useRouter();
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between gap-4 bg-[#0d0d1a]/95 px-6 py-3 backdrop-blur-sm">
+    <header className="sticky top-0 z-30 flex items-center justify-between gap-4 bg-[#151628] px-6 py-3 mb-6">
       {/* Navigation Arrows */}
       <div className="flex items-center gap-2">
         <button

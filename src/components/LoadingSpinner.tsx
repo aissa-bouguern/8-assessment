@@ -1,17 +1,13 @@
 "use client";
 
-interface LoadingSpinnerProps {
-  message?: string;
-}
-
-export function LoadingSpinner({ message = "Loading..." }: LoadingSpinnerProps) {
+export function LoadingSpinner() {
   return (
     <div className="flex flex-col items-center justify-center py-16">
-      <div className="relative">
-        <div className="h-12 w-12 rounded-full border-4 border-gray-200"></div>
-        <div className="absolute left-0 top-0 h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+      <div className="relative h-20 w-20">
+        <div className="absolute inset-0 rounded-full border-2 border-purple-400 animate-spinner-grow-1"></div>
+        <div className="absolute inset-2 rounded-full border-2 border-purple-300 animate-spinner-grow-2"></div>
+        <div className="absolute inset-4 rounded-full border-2 border-pink-400 animate-spinner-grow-3"></div>
       </div>
-      <p className="mt-4 text-gray-500">{message}</p>
     </div>
   );
 }

@@ -5,8 +5,9 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { Header } from "@/components/Header";
 import { MediaList } from "@/components/MediaList";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { PodcastsSection } from "@/components/PodcastsSection";
 import { EmptyState } from "@/components/EmptyState";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 import type { MediaItem, SearchApiResponse } from "@/types/media";
 
 type SearchState = "idle" | "loading" | "success" | "error";
@@ -85,12 +86,12 @@ export default function Home() {
   const episodes = results.filter((item) => item.kind !== "podcast");
 
   return (
-    <div className="flex min-h-screen">
+    <div className="grid min-h-screen grid-cols-[225px_1fr]">
       {/* Sidebar */}
       <Sidebar />
 
       {/* Main Content */}
-      <div className="ml-56 flex-1">
+      <div className="max-w-[calc(100vw-225px)] bg-[#151628] border-s border-gray-800">
         {/* Header */}
         <Header
           onSearch={handleSearch}
@@ -105,9 +106,7 @@ export default function Home() {
           <section aria-live="polite" aria-atomic="true">
             {state === "idle" && <EmptyState type="idle" />}
 
-            {state === "loading" && (
-              <LoadingSpinner message={`Searching for "${searchTerm}"...`} />
-            )}
+            {state === "loading" && <LoadingSpinner />}
 
             {state === "error" && (
               <EmptyState
@@ -126,14 +125,11 @@ export default function Home() {
             {state === "success" && results.length > 0 && (
               <div className="space-y-10">
                 {/* Top Podcasts Section */}
-                {podcasts.length > 0 && (
-                  <MediaList
-                    title={`Top podcasts for ${searchTerm}`}
-                    items={podcasts}
-                    layout={layout}
-                    variant="featured"
-                  />
-                )}
+                <PodcastsSection
+                  searchTerm={searchTerm}
+                  podcasts={podcasts}
+                  layout={layout}
+                />
 
                 {/* Top Episodes Section */}
                 {episodes.length > 0 && (

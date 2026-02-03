@@ -7,7 +7,12 @@ const navItems = [
     label: "Home",
     href: "/",
     icon: (
-      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -21,7 +26,12 @@ const navItems = [
     label: "Discover",
     href: "/discover",
     icon: (
-      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -38,7 +48,12 @@ const yourStuffItems = [
     label: "My Queue",
     href: "/queue",
     icon: (
-      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -52,7 +67,12 @@ const yourStuffItems = [
     label: "My Podcasts",
     href: "/podcasts",
     icon: (
-      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -66,7 +86,12 @@ const yourStuffItems = [
     label: "Recents",
     href: "/recents",
     icon: (
-      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -80,11 +105,15 @@ const yourStuffItems = [
 
 export function Sidebar() {
   return (
-    <aside className="fixed left-0 top-0 z-40 flex h-screen w-56 flex-col bg-[#0d0d1a] px-4 py-6">
+    <aside className="sticky top-0 flex h-screen flex-col bg-[#0d0d1a] px-4 py-6">
       {/* Logo */}
       <Link href="/" className="mb-8 flex items-center gap-2 px-2">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
-          <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="h-5 w-5 text-white"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
           </svg>
         </div>
@@ -128,7 +157,7 @@ export function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="mt-auto border-t border-[#2a2a4a] pt-4">
+      <div className="mt-auto pt-4">
         <p className="px-3 text-xs text-gray-500">
           Podbay v2.0.6 by Fancy Squid
         </p>

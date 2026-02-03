@@ -71,7 +71,7 @@ export function MediaList({ title, items, layout, variant }: MediaListProps) {
         </div>
 
         {/* Horizontal Scrollable Grid */}
-        <div className="hide-scrollbar -mx-6 flex gap-4 overflow-x-auto px-6 pb-4">
+        <div className="media-list-scroll flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain pb-4">
           {items.map((item) => (
             <FeaturedCard key={item.id} item={item} />
           ))}
@@ -84,11 +84,11 @@ export function MediaList({ title, items, layout, variant }: MediaListProps) {
   return (
     <section>
       <div className="mb-4">
-        <h2 className="text-xl font-semibold text-white">{title}</h2>
+        <h2 className="text-md font-semibold text-white">{title}</h2>
       </div>
 
       {variant === "featured" ? (
-        <div className="hide-scrollbar -mx-6 flex gap-4 overflow-x-auto px-6 pb-4">
+        <div className="media-list-scroll flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain pb-4">
           {items.map((item) => (
             <FeaturedCard key={item.id} item={item} />
           ))}
@@ -110,9 +110,9 @@ function FeaturedCard({ item }: { item: MediaItem }) {
       href={item.trackViewUrl || "#"}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex-shrink-0"
+      className="group flex-shrink-0 snap-start"
     >
-      <div className="relative h-40 w-40 overflow-hidden rounded-lg bg-[#1a1a2e]">
+      <div className="relative h-56 w-56 overflow-hidden rounded-lg bg-[#1a1a2e]">
         {item.artworkUrl ? (
           <Image
             src={item.artworkUrl}
