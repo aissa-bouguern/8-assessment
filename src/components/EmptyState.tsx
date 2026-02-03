@@ -24,7 +24,7 @@ export function EmptyState({ type, message }: EmptyStateProps) {
         </svg>
       ),
       title: "Start your search",
-      description: "Search for songs, podcasts, movies, audiobooks and more",
+      description: "Search for podcasts, movies, audiobooks and more",
     },
     empty: {
       icon: (
