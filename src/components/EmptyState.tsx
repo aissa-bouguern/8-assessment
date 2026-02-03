@@ -10,7 +10,7 @@ export function EmptyState({ type, message }: EmptyStateProps) {
     idle: {
       icon: (
         <svg
-          className="h-16 w-16 text-gray-300"
+          className="h-16 w-16 text-gray-600"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -29,7 +29,7 @@ export function EmptyState({ type, message }: EmptyStateProps) {
     empty: {
       icon: (
         <svg
-          className="h-16 w-16 text-gray-300"
+          className="h-16 w-16 text-gray-600"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -48,7 +48,7 @@ export function EmptyState({ type, message }: EmptyStateProps) {
     error: {
       icon: (
         <svg
-          className="h-16 w-16 text-red-300"
+          className="h-16 w-16 text-red-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -71,8 +71,8 @@ export function EmptyState({ type, message }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
       {icon}
-      <h3 className="mt-4 text-lg font-medium text-gray-900">{title}</h3>
-      <p className="mt-2 text-gray-500">{description}</p>
+      <h3 className="mt-4 text-lg font-medium text-white">{title}</h3>
+      <p className="mt-2 text-gray-400">{description}</p>
     </div>
   );
 }

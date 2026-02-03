@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { cn, formatPrice, isRTL, truncate } from "@/lib/utils";
+import { cn, formatPrice, truncate } from "@/lib/utils";
 import { MEDIA_TYPE_BADGES, type MediaItem } from "@/types/media";
 
 interface MediaCardProps {
@@ -10,16 +10,15 @@ interface MediaCardProps {
 
 export function MediaCard({ item }: MediaCardProps) {
   const badge = MEDIA_TYPE_BADGES[item.kind] || MEDIA_TYPE_BADGES.default;
-  const textDir = isRTL(item.trackName) ? "rtl" : "ltr";
 
   return (
     <a
       href={item.trackViewUrl || "#"}
       target="_blank"
       rel="noopener noreferrer"
-      className="card group block overflow-hidden rounded-2xl bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+      className="card group block overflow-hidden rounded-2xl bg-[#151528] shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
     >
-      <div className="relative aspect-square overflow-hidden bg-gray-100">
+      <div className="relative aspect-square overflow-hidden bg-[#1a1a2e]">
         {item.artworkUrl ? (
           <Image
             src={item.artworkUrl}
@@ -31,7 +30,7 @@ export function MediaCard({ item }: MediaCardProps) {
         ) : (
           <div className="flex h-full items-center justify-center">
             <svg
-              className="h-16 w-16 text-gray-300"
+              className="h-16 w-16 text-gray-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -49,29 +48,35 @@ export function MediaCard({ item }: MediaCardProps) {
         <span
           className={cn(
             "absolute left-3 top-3 rounded-full px-2.5 py-1 text-xs font-medium",
-            badge.color
+            badge.color,
           )}
         >
           {badge.label}
         </span>
       </div>
 
-      <div className="p-4" dir={textDir}>
-        <h3 className="font-semibold text-gray-900 line-clamp-2">
+      <div className="p-4">
+        <h3 className="font-semibold text-white line-clamp-2">
           {truncate(item.trackName, 50)}
         </h3>
-        <p className="mt-1 text-sm text-gray-500 line-clamp-1">{item.artistName}</p>
+        <p className="mt-1 text-sm text-pink-500 line-clamp-1">
+          {item.artistName}
+        </p>
 
         {item.collectionName && item.collectionName !== item.trackName && (
-          <p className="mt-1 text-xs text-gray-400 line-clamp-1">{item.collectionName}</p>
+          <p className="mt-1 text-xs text-gray-500 line-clamp-1">
+            {item.collectionName}
+          </p>
         )}
 
         <div className="mt-3 flex items-center justify-between">
-          <span className="text-sm font-medium text-blue-600">
+          <span className="text-sm font-medium text-blue-400">
             {formatPrice(item.trackPrice, item.currency)}
           </span>
           {item.primaryGenreName && (
-            <span className="text-xs text-gray-400">{item.primaryGenreName}</span>
+            <span className="text-xs text-gray-500">
+              {item.primaryGenreName}
+            </span>
           )}
         </div>
       </div>
