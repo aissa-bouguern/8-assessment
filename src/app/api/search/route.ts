@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { searchItunes, normalizeITunesResult } from "@/lib/itunes";
 import type { SearchApiResponse, MediaItem } from "@/types/media";
 
@@ -71,31 +72,65 @@ export async function GET(
       .map((result) => normalizeITunesResult(result, searchTerm))
       .filter((item): item is NonNullable<typeof item> => item !== null);
 
-    /**
-     * Upsert each item in parallel
-     */
-    const upsertPromises = normalizedResults.map((item) =>
-      prisma.mediaItem.upsert({
-        where: { trackId: item.trackId },
-        update: {
-          trackName: item.trackName,
-          artistName: item.artistName,
-          artworkUrl: item.artworkUrl,
-          collectionName: item.collectionName,
-          kind: item.kind,
-          trackPrice: item.trackPrice,
-          currency: item.currency,
-          primaryGenreName: item.primaryGenreName,
-          trackViewUrl: item.trackViewUrl,
-          previewUrl: item.previewUrl,
-          releaseDate: item.releaseDate,
-          searchTerm: item.searchTerm,
-        },
-        create: item,
-      }),
-    );
+    if (normalizedResults.length === 0) {
+      return NextResponse.json({
+        success: true,
+        data: [],
+        count: 0,
+        term: searchTerm,
+        cached: false,
+      });
+    }
 
-    const storedItems = await Promise.all(upsertPromises);
+    /**
+     * Batch upsert using raw SQL for maximum performance
+     * Single query instead of N queries
+     */
+    const trackIds = normalizedResults.map((item) => item.trackId);
+
+    await prisma.$executeRaw`
+      INSERT INTO "MediaItem" (
+        "trackId", "trackName", "artistName", "artworkUrl", "collectionName",
+        "kind", "trackPrice", "currency", "primaryGenreName", "trackViewUrl",
+        "previewUrl", "releaseDate", "searchTerm", "createdAt", "updatedAt"
+      )
+      SELECT * FROM UNNEST(
+        ${normalizedResults.map((i) => i.trackId)}::int[],
+        ${normalizedResults.map((i) => i.trackName)}::text[],
+        ${normalizedResults.map((i) => i.artistName)}::text[],
+        ${normalizedResults.map((i) => i.artworkUrl)}::text[],
+        ${normalizedResults.map((i) => i.collectionName)}::text[],
+        ${normalizedResults.map((i) => i.kind)}::text[],
+        ${normalizedResults.map((i) => i.trackPrice)}::float[],
+        ${normalizedResults.map((i) => i.currency)}::text[],
+        ${normalizedResults.map((i) => i.primaryGenreName)}::text[],
+        ${normalizedResults.map((i) => i.trackViewUrl)}::text[],
+        ${normalizedResults.map((i) => i.previewUrl)}::text[],
+        ${normalizedResults.map((i) => i.releaseDate)}::timestamp[],
+        ${normalizedResults.map((i) => i.searchTerm)}::text[],
+        ${normalizedResults.map(() => new Date())}::timestamp[],
+        ${normalizedResults.map(() => new Date())}::timestamp[]
+      )
+      ON CONFLICT ("trackId") DO UPDATE SET
+        "trackName" = EXCLUDED."trackName",
+        "artistName" = EXCLUDED."artistName",
+        "artworkUrl" = EXCLUDED."artworkUrl",
+        "collectionName" = EXCLUDED."collectionName",
+        "kind" = EXCLUDED."kind",
+        "trackPrice" = EXCLUDED."trackPrice",
+        "currency" = EXCLUDED."currency",
+        "primaryGenreName" = EXCLUDED."primaryGenreName",
+        "trackViewUrl" = EXCLUDED."trackViewUrl",
+        "previewUrl" = EXCLUDED."previewUrl",
+        "releaseDate" = EXCLUDED."releaseDate",
+        "searchTerm" = EXCLUDED."searchTerm",
+        "updatedAt" = NOW()
+    `;
+
+    // Fetch the upserted items
+    const storedItems = await prisma.mediaItem.findMany({
+      where: { trackId: { in: trackIds } },
+    });
 
     /**
      * Cache the results
