@@ -219,34 +219,7 @@ function getCachedResults(term: string): MediaItem[] | null {
 
 ---
 
-### Challenge 4: `useSearchParams()` Suspense Boundary
-
-**Problem**:
-
-```
-useSearchParams() should be wrapped in a suspense boundary at page "/"
-```
-
-**Solution**: Extract content to a separate component and wrap with `<Suspense>`:
-
-```tsx
-function HomeContent() {
-  const searchParams = useSearchParams();
-  // ... component logic
-}
-
-export default function Home() {
-  return (
-    <Suspense fallback={<LoadingSpinner />}>
-      <HomeContent />
-    </Suspense>
-  );
-}
-```
-
----
-
-### Challenge 5: Loading Spinner Flash
+### Challenge 4: Loading Spinner Flash
 
 **Problem**: Spinner appeared briefly even for fast cached responses, causing UI flicker.
 
