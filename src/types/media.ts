@@ -8,6 +8,7 @@ export interface SearchApiResponse {
   count?: number;
   term?: string;
   error?: string;
+  cached?: boolean;
 }
 
 export const MEDIA_TYPE_BADGES: Record<string, { label: string; color: string }> = {
