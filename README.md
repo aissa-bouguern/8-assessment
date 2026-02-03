@@ -64,18 +64,6 @@ Browser → Next.js (SSR + API) → Database
 - **Unified error handling** and logging
 - **Type safety** across the entire stack without extra tooling
 
-### 5. When to Choose a Separate Backend
-
-A dedicated backend (Nest.js, Express, etc.) would be justified if:
-
-- Multiple frontend clients (web, mobile, third-party)
-- Complex authentication/authorization (OAuth, RBAC)
-- Background jobs, queues, or scheduled tasks
-- Microservices architecture
-- Team separation (frontend/backend teams)
-
-**None of these apply to this assessment.**
-
 ---
 
 ## Architecture Overview
