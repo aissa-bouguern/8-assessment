@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { SearchBar } from "./SearchBar";
 import { KebabMenu } from "./KebabMenu";
 import { Button } from "./Button";
+import Image from "next/image";
 
 interface HeaderProps {
   onSearch: (term: string) => void;
@@ -27,14 +28,8 @@ export function Header({
       <div className="flex items-center gap-2">
         {/* Logo - only visible on mobile */}
         <div className="md:hidden">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
-            <svg
-              className="h-5 w-5 text-white"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-            </svg>
+          <div className="flex h-8 w-8 items-center justify-center">
+            <Image src="/icon.svg" alt="Thmanyah" width={28} height={28} />
           </div>
         </div>
         <button

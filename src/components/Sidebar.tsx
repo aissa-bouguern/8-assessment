@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 
 const navItems = [
@@ -108,14 +109,8 @@ export function Sidebar() {
     <aside className="sticky top-0 flex h-screen flex-col bg-[#0d0d1a] px-4 py-6">
       {/* Logo */}
       <Link href="/" className="mb-8 flex items-center gap-2 px-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
-          <svg
-            className="h-5 w-5 text-white"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-          </svg>
+        <div className="flex h-8 w-8 items-center justify-center">
+          <Image src="/icon.svg" alt="Thmanyah" width={28} height={28} />
         </div>
       </Link>
 
