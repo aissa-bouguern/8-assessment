@@ -8,7 +8,7 @@
 
 [https://github.com/aissa-bouguern/8-assessment](https://github.com/aissa-bouguern/8-assessment)
 
-## Tech Stack
+## Tech Stackd
 
 | Layer           | Technology                             |
 | --------------- | -------------------------------------- |
