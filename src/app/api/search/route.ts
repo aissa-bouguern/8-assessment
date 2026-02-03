@@ -4,7 +4,7 @@ import { Prisma } from "@prisma/client";
 import { searchItunes, normalizeITunesResult } from "@/lib/itunes";
 import type { SearchApiResponse, MediaItem } from "@/types/media";
 
-const CACHE_TTL_MS = 60 * 1000; // 1 minute
+const CACHE_TTL_MS = 120 * 1000; // 2 minutes
 
 type CacheEntry = {
   data: MediaItem[];
