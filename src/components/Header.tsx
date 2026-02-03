@@ -22,9 +22,21 @@ export function Header({
 }: HeaderProps) {
   const router = useRouter();
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between gap-4 bg-[#151628] px-6 py-3 mb-6">
-      {/* Navigation Arrows */}
+    <header className="sticky top-0 z-30 flex items-center justify-between gap-4 bg-[#151628] px-4 py-3 mb-6">
+      {/* Logo + Navigation Arrows */}
       <div className="flex items-center gap-2">
+        {/* Logo - only visible on mobile */}
+        <div className="md:hidden">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
+            <svg
+              className="h-5 w-5 text-white"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg>
+          </div>
+        </div>
         <button
           type="button"
           onClick={() => router.back()}
@@ -78,17 +90,18 @@ export function Header({
 
       {/* Right Section */}
       <div className="flex items-center gap-3">
-        <div className="w-auto">
+        {/* Hide login/signup buttons on mobile - these are sidebar elements */}
+        <div className="hidden md:block w-auto">
           <Button className="whitespace-nowrap rounded-lg px-3 text-sm">
             Log in
           </Button>
         </div>
-        <div className="w-auto">
+        <div className="hidden md:block w-auto">
           <Button className="whitespace-nowrap rounded-lg px-3 text-sm">
             Sign up
           </Button>
         </div>
-        <KebabMenu layout={layout} onLayoutChange={onLayoutChange} />
+        <KebabMenu />
       </div>
     </header>
   );

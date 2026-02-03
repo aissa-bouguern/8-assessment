@@ -6,6 +6,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { Header } from "@/components/Header";
 import { MediaList } from "@/components/MediaList";
 import { PodcastsSection } from "@/components/PodcastsSection";
+import { EpisodesSection } from "@/components/EpisodesSection";
 import { EmptyState } from "@/components/EmptyState";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import type { MediaItem, SearchApiResponse } from "@/types/media";
@@ -86,12 +87,14 @@ export default function Home() {
   const episodes = results.filter((item) => item.kind !== "podcast");
 
   return (
-    <div className="grid min-h-screen grid-cols-[225px_1fr]">
-      {/* Sidebar */}
-      <Sidebar />
+    <div className="min-h-screen">
+      {/* Sidebar - hidden on mobile */}
+      <div className="hidden md:block fixed left-0 top-0 h-screen w-[225px]">
+        <Sidebar />
+      </div>
 
       {/* Main Content */}
-      <div className="max-w-[calc(100vw-225px)] bg-[#151628] border-s border-gray-800">
+      <div className="md:ml-[225px] bg-[#151628] md:border-s md:border-gray-800 min-h-screen">
         {/* Header */}
         <Header
           onSearch={handleSearch}
@@ -102,7 +105,7 @@ export default function Home() {
         />
 
         {/* Content Area */}
-        <main className="px-6 py-6">
+        <main className="px-4 py-6">
           <section aria-live="polite" aria-atomic="true">
             {state === "idle" && <EmptyState type="idle" />}
 
@@ -132,14 +135,11 @@ export default function Home() {
                 />
 
                 {/* Top Episodes Section */}
-                {episodes.length > 0 && (
-                  <MediaList
-                    title={`Top episodes for ${searchTerm}`}
-                    items={episodes}
-                    layout={layout}
-                    variant="compact"
-                  />
-                )}
+                <EpisodesSection
+                  searchTerm={searchTerm}
+                  episodes={episodes}
+                  layout={layout}
+                />
 
                 {/* If no podcasts, show all as episodes */}
                 {podcasts.length === 0 && episodes.length === 0 && (

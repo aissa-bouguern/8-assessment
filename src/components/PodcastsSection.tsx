@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { MediaList } from "./MediaList";
 import { truncate } from "@/lib/utils";
@@ -63,6 +63,18 @@ export function PodcastsSection({
   const [sectionLayout, setSectionLayout] = useState<"list" | "grid">(layout);
   const [showMenu, setShowMenu] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
@@ -133,7 +145,7 @@ export function PodcastsSection({
               </button>
             </>
           )}
-          <div className="relative">
+          <div className="relative" ref={menuRef}>
             <button
               type="button"
               className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-[#1a1a2e] hover:text-white"

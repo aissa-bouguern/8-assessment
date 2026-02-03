@@ -3,7 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { searchItunes, normalizeITunesResult } from "@/lib/itunes";
 import type { SearchApiResponse } from "@/types/media";
 
-export async function GET(request: NextRequest): Promise<NextResponse<SearchApiResponse>> {
+export async function GET(
+  request: NextRequest,
+): Promise<NextResponse<SearchApiResponse>> {
   const searchParams = request.nextUrl.searchParams;
   const term = searchParams.get("term");
 
@@ -11,17 +13,21 @@ export async function GET(request: NextRequest): Promise<NextResponse<SearchApiR
   if (!term || term.trim() === "") {
     return NextResponse.json(
       { success: false, error: "Search term is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   const searchTerm = term.trim();
 
   try {
-    // Fetch results from iTunes API
+    /**
+     * Fetch results from iTunes API
+     */
     const iTunesResults = await searchItunes(searchTerm);
 
-    // Normalize results and filter out invalid ones
+    /**
+     * Normalize results and filter out invalid ones
+     */
     const normalizedResults = iTunesResults
       .map((result) => normalizeITunesResult(result, searchTerm))
       .filter((item): item is NonNullable<typeof item> => item !== null);
@@ -45,7 +51,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<SearchApiR
           searchTerm: item.searchTerm,
         },
         create: item,
-      })
+      }),
     );
 
     const storedItems = await Promise.all(upsertPromises);
@@ -64,7 +70,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<SearchApiR
 
     return NextResponse.json(
       { success: false, error: errorMessage },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
